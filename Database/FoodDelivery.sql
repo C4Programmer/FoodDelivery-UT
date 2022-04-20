@@ -14,7 +14,7 @@ CREATE TABLE `Types` (
   `name` varchar(255)
 );
 
-CREATE TABLE `RestaurantAdministrators` (
+CREATE TABLE `Administrators` (
   `id` int PRIMARY KEY,
   `userId` int
 );
@@ -28,7 +28,7 @@ CREATE TABLE `Restaurants` (
   `id` int PRIMARY KEY,
   `name` varchar(255),
   `location` varchar(255),
-  `restaurantAdministratorsId` int
+  `administratorsId` int
 );
 
 CREATE TABLE `DeliveryZones` (
@@ -45,13 +45,8 @@ CREATE TABLE `Zones` (
 
 CREATE TABLE `Menus` (
   `id` int PRIMARY KEY,
-  `foodId` int,
   `restaurantId` int,
-  `price` double
-);
-
-CREATE TABLE `Foods` (
-  `id` int PRIMARY KEY,
+  `price` double,
   `name` varchar(255),
   `description` varchar(255),
   `category` varchar(255)
@@ -60,8 +55,9 @@ CREATE TABLE `Foods` (
 CREATE TABLE `Orders` (
   `id` int PRIMARY KEY,
   `name` varchar(255),
-  `customerId` int,
-  `menuId` int
+  `price` double,
+  `date` datetime,
+  `customerId` int
 );
 
 CREATE TABLE `FoodCarts` (
@@ -79,17 +75,15 @@ CREATE TABLE `Ratings` (
 
 ALTER TABLE `Users` ADD FOREIGN KEY (`typeId`) REFERENCES `Types` (`id`);
 
-ALTER TABLE `Users` ADD FOREIGN KEY (`id`) REFERENCES `RestaurantAdministrators` (`userId`);
+ALTER TABLE `Users` ADD FOREIGN KEY (`id`) REFERENCES `Administrators` (`userId`);
 
 ALTER TABLE `Users` ADD FOREIGN KEY (`id`) REFERENCES `Customers` (`userId`);
 
-ALTER TABLE `RestaurantAdministrators` ADD FOREIGN KEY (`id`) REFERENCES `Restaurants` (`restaurantAdministratorsId`);
+ALTER TABLE `Administrators` ADD FOREIGN KEY (`id`) REFERENCES `Restaurants` (`administratorsId`);
 
 ALTER TABLE `Zones` ADD FOREIGN KEY (`restaurantId`) REFERENCES `Restaurants` (`id`);
 
 ALTER TABLE `Zones` ADD FOREIGN KEY (`deliveryZoneId`) REFERENCES `DeliveryZones` (`id`);
-
-ALTER TABLE `Menus` ADD FOREIGN KEY (`foodId`) REFERENCES `Foods` (`id`);
 
 ALTER TABLE `Menus` ADD FOREIGN KEY (`restaurantId`) REFERENCES `Restaurants` (`id`);
 
