@@ -1,6 +1,5 @@
 package FDBackend.Controllers;
 
-import FDBackend.Entities.Menu;
 import FDBackend.Entities.Restaurant;
 import FDBackend.Exceptions.ExceptionHandling;
 import FDBackend.Exceptions.RestaurantExceptions.*;
@@ -12,12 +11,15 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 @RestController
 @RequestMapping(value = "/restaurants")
 public class RestaurantController extends ExceptionHandling {
 
     private final IRestaurantService restaurantService;
-
+    private final Logger LOGGER = LoggerFactory.getLogger(getClass());
     @Autowired
     public RestaurantController(IRestaurantService restaurantService) {
         this.restaurantService = restaurantService;
@@ -25,6 +27,7 @@ public class RestaurantController extends ExceptionHandling {
 
     @GetMapping
     public ResponseEntity<List<Restaurant>> findAll() throws RestaurantEmptyDatabase {
+        LOGGER.info("Get all restaurants-Controller");
         var result = restaurantService.findAll();
         if(result.size() < 1){
             throw new RestaurantEmptyDatabase("No Restaurants have been saved into the database!");
@@ -34,6 +37,7 @@ public class RestaurantController extends ExceptionHandling {
 
     @GetMapping(value = "/{id}")
     public ResponseEntity<Restaurant> findByAdministrator(@PathVariable Long id) throws RestaurantEmptyDatabase {
+        LOGGER.info("Get Administrator's Restaurant-Controller");
         var result = restaurantService.findByAdministratorId(id);
         if(result == null){
             throw new RestaurantEmptyDatabase("No Restaurants have been saved into the database!");
@@ -43,6 +47,7 @@ public class RestaurantController extends ExceptionHandling {
 
     @PostMapping
     public ResponseEntity<Restaurant> saveRestaurant(@RequestBody Restaurant restaurant) throws RestaurantAdministratorNullObject, RestaurantDeliveryZoneNullObject, RestaurantLocationNullObject, RestaurantNameNullObject, RestaurantNameExist, RestaurantAdminAlreadyAssigned, RestaurantMenuNullObject {
+        LOGGER.info("Add restaurant-controller");
         if(restaurant.getAdministrator() == null){
             throw new RestaurantAdministratorNullObject("Restaurant's administrator data must be received!");
         }

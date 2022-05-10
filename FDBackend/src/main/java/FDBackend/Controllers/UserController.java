@@ -18,12 +18,14 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.web.bind.annotation.*;
 
 import static FDBackend.Configurations.SecurityConstants.JWT_TOKEN_HEADER;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 @RestController
 @RequestMapping(value = "/users")
 public class UserController extends ExceptionHandling {
 
     private final IUserService userService;
+    private final Logger LOGGER = LoggerFactory.getLogger(getClass());
     private final AuthenticationManager authenticationManager;
     private final JWTProvider jwtTokenProvider;
 
@@ -37,12 +39,14 @@ public class UserController extends ExceptionHandling {
 
     @PostMapping("/register")
     public ResponseEntity<User> register(@RequestBody User user) throws UserUsernameExist, UserEmailExist {
+        LOGGER.info("Register user-controller");
         var result = userService.register(user);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     @PostMapping("/login")
     public ResponseEntity<User> login(@RequestBody User user) throws UserNullObject {
+        LOGGER.info("Login user-controller");
         authenticate(user.getUsername(), user.getPassword());
         User loginUser =  userService.findUserByUsername(user.getUsername());
         AuthenticationUser authUser = new AuthenticationUser(loginUser);
@@ -58,11 +62,13 @@ public class UserController extends ExceptionHandling {
 
     private HttpHeaders getJWTHeader(AuthenticationUser authUser) {
         HttpHeaders httpHeaders =  new HttpHeaders();
+        LOGGER.info("GET TOKEN-controller");
         httpHeaders.add(JWT_TOKEN_HEADER,jwtTokenProvider.generateJwtToken(authUser));
         return httpHeaders;
     }
 
     private void authenticate(String username, String password) {
+        LOGGER.info("authenticate user-controller");
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username,password));
     }
 }

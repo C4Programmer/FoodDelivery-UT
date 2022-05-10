@@ -1,0 +1,15 @@
+FDBackend
+FDBackend.Configurations
+FDBackend.Controllers
+FDBackend.DTOs
+FDBackend.Entities
+FDBackend.Enums
+FDBackend.Exceptions
+FDBackend.Exceptions.MenuExceptions
+FDBackend.Exceptions.RestaurantExceptions
+FDBackend.Exceptions.UserExceptions
+FDBackend.Repositories
+FDBackend.Security
+FDBackend.Security.Filters
+FDBackend.Services
+FDBackend.Services.ServiceImplementation

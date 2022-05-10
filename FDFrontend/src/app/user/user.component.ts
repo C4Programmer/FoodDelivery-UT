@@ -1,7 +1,8 @@
 import { HttpErrorResponse, HttpEvent, HttpEventType } from '@angular/common/http';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component,ViewChild, ElementRef, OnDestroy, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
+import {jsPDF} from 'jspdf';
 import { BehaviorSubject, Subscription } from 'rxjs';
 import { NotificationType } from '../enum/notification-type.enum';
 import { Menu } from '../model/menu';
@@ -10,7 +11,6 @@ import { User } from '../model/user';
 import { AuthenticationService } from '../service/authentication.service';
 import { NotificationService } from '../service/notification.service';
 import { UserService } from '../service/user.service';
-
 @Component({
   selector: 'app-user',
   templateUrl: './user.component.html',
@@ -167,7 +167,7 @@ export class UserComponent implements OnInit, OnDestroy {
     const formData = this.userService.createTemporaryRestaurantFormData(restaurantForm.value);
     this.subscriptions.push(
       this.userService.addRestaurant(formData,this.user?.administrator.id || 1).subscribe(
-        (response: Restaurant) => {
+        (_response: Restaurant) => {
           this.clickButton('new-user-close');
           this.getRestaurants(false);
           restaurantForm.reset();
@@ -209,11 +209,16 @@ export class UserComponent implements OnInit, OnDestroy {
     }
   }
 
+  public downloadAsPDF() {
+    const doc = new jsPDF();
+    const data = document.getElementById('viewRestaurantModal')?.innerText;
+    doc.text(data+'', 10, 10);
+    doc.save("menu.pdf");
+  }
+
   ngOnDestroy(): void {
     this.subscriptions.forEach(sub => sub.unsubscribe());
   }
 
 }
-
-
 
